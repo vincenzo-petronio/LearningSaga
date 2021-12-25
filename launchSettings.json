@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "mongodb": "StartWithoutDebugging",
+        "mongodb_gui": "StartWithoutDebugging",
+        "orchestrator": "DoNotStart",
+        "rabbitmq": "DoNotStart",
+        "serviceone": "DoNotStart",
+        "servicetwo": "DoNotStart"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672     # rabbit
+        - 15672:15672   # http management plugin
+        #- 15671:15671   # https management plugin
+
+  mongodb:
+    build:
+        context: Data
+    container_name: mongodb
+    restart: always
+    ports:
+        - "27017:27017"
+
+  mongodb_gui:
+    image: mongo-express
+    restart: always
+    ports:
+        - 8081:8081 # mongodb gui
+    environment:
+        - ME_CONFIG_MONGODB_SERVER=mongodb
+        - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+        - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
+    depends_on:
+        - mongodb
+
+  orchestrator:
+    image: ${DOCKER_REGISTRY-}orchestrator
+    build:
+      context: .
+      dockerfile: Orchestrator/Dockerfile
+    ports:
+      - "6000:80"
+
+  serviceone:
+    image: ${DOCKER_REGISTRY-}serviceone
+    build:
+      context: .
+      dockerfile: ServiceOne/Dockerfile
+    ports:
+      - "6100:80"
+
+  servicetwo:
+    image: ${DOCKER_REGISTRY-}servicetwo
+    build:
+      context: .
+      dockerfile: ServiceTwo/Dockerfile
+    ports:
+      - "6200:80"

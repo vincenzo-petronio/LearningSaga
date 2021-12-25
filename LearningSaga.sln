@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceOne", "ServiceOne\ServiceOne.csproj", "{8CDFD57A-4506-4D76-9D74-159E2545E92D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceOne", "ServiceOne\ServiceOne.csproj", "{8CDFD57A-4506-4D76-9D74-159E2545E92D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceTwo", "ServiceTwo\ServiceTwo.csproj", "{D32BAFA8-D92D-48AC-90BD-7BB5D728CC52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceTwo", "ServiceTwo\ServiceTwo.csproj", "{D32BAFA8-D92D-48AC-90BD-7BB5D728CC52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{9C7156F4-BD4D-4F24-B1F3-A86C7AE6EE0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{9C7156F4-BD4D-4F24-B1F3-A86C7AE6EE0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrator", "Orchestrator\Orchestrator.csproj", "{BD66DB26-126B-4BDD-B199-CA536D57598D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orchestrator", "Orchestrator\Orchestrator.csproj", "{BD66DB26-126B-4BDD-B199-CA536D57598D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F091391B-A5E1-4181-9336-9D391A0F8139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{BD66DB26-126B-4BDD-B199-CA536D57598D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD66DB26-126B-4BDD-B199-CA536D57598D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD66DB26-126B-4BDD-B199-CA536D57598D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F091391B-A5E1-4181-9336-9D391A0F8139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F091391B-A5E1-4181-9336-9D391A0F8139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F091391B-A5E1-4181-9336-9D391A0F8139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F091391B-A5E1-4181-9336-9D391A0F8139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
