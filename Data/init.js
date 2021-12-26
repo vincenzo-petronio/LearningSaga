@@ -31,3 +31,7 @@ db.products.insertMany([
         price: 10
     }
 ]);
+
+db.wallet.insertOne({
+    amount: 0
+});
