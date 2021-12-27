@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Common;
+using Microsoft.Extensions.Logging;
 using OpenSleigh.Core;
 using OpenSleigh.Core.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Orchestrator
 {
@@ -15,29 +11,8 @@ namespace Orchestrator
         public BuySagaState(Guid id) : base(id)
         {
         }
-    }
 
-    // MESSAGES
-    public record BuySagaStart(Guid id, Guid correlationId) : ICommand
-    {
-        public Guid Id => this.Id;
-        public Guid CorrelationId => this.CorrelationId;
-    }
-    public record BuySagaProcessProduct(Guid id, Guid correlationId) : ICommand
-    {
-        public Guid Id => this.Id;
-        public Guid CorrelationId => this.CorrelationId;
-    }
-    public record BuySagaProcessWallet(Guid id, Guid correlationId) : ICommand
-    {
-        public Guid Id => this.Id;
-        public Guid CorrelationId => this.CorrelationId;
-    }
-    //EVENTS
-    public record BuySagaEnd(Guid id, Guid correlationId) : IEvent
-    {
-        public Guid Id => this.Id;
-        public Guid CorrelationId => this.CorrelationId;
+        public int Items { get; set; }
     }
 
     public class BuySaga : Saga<BuySagaState>,
@@ -47,22 +22,43 @@ namespace Orchestrator
         IHandleMessage<BuySagaEnd>
     {
         private readonly ILogger<BuySaga> _logger;
+        private readonly IServices _services;
 
-        public BuySaga(ILogger<BuySaga> logger, BuySagaState state) : base(state)
+        public BuySaga(ILogger<BuySaga> logger, IServices services, BuySagaState state) : base(state)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _services = services ?? throw new ArgumentNullException(nameof(_services));
         }
 
         public Task HandleAsync(IMessageContext<BuySagaStart> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"SAGA start '{context.Message.CorrelationId}'...");
-            throw new NotImplementedException();
+
+            this.State.Items = 100;
+
+            var msg = new BuySagaProcessProduct(Guid.NewGuid(), context.Message.CorrelationId);
+            this.Publish(msg);
+
+            return Task.CompletedTask;
         }
 
-        public Task HandleAsync(IMessageContext<BuySagaProcessProduct> context, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(IMessageContext<BuySagaProcessProduct> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"SAGA process Product '{context.Message.CorrelationId}'...");
-            throw new NotImplementedException();
+
+            var products = await _services.GetAllProducts();
+            var phones = products.Where(p => p.Name.Equals("phone")).FirstOrDefault();
+
+            if (phones?.Quantity > this.State.Items)
+            {
+                bool result = await _services.OrderProduct(phones.Name, this.State.Items);
+
+                if (result)
+                {
+                    var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
+                    this.Publish(msg);
+                }
+            }
         }
 
         public Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)

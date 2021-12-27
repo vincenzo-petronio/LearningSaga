@@ -36,7 +36,7 @@ namespace ServiceOne.Controllers
 
         // POST api/<ProductsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Product product)
         {
         }
 

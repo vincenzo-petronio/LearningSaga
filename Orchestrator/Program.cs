@@ -1,11 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Common;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenSleigh.Core.DependencyInjection;
 using OpenSleigh.Persistence.Mongo;
 using OpenSleigh.Transport.RabbitMQ;
 using Orchestrator;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Start Orchestrator...");
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostCtx, services) =>
@@ -20,6 +22,8 @@ await Host.CreateDefaultBuilder(args)
             .UseRabbitMQTransport()
             ;
         });
+        services.AddHttpClient();
+        services.AddScoped<IServices, Services>();
     })
     .Build()
     .RunAsync();

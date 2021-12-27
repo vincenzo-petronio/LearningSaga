@@ -22,12 +22,12 @@ db.products.insertMany([
     },
     {
         name: 'keyboard',
-        qty: 4000,
+        qty: 5000,
         price: 1
     },
     {
         name: 'monitor',
-        qty: 20,
+        qty: 5000,
         price: 10
     }
 ]);
