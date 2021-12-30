@@ -1,33 +1,16 @@
-﻿using System.Net.Http;
+﻿using Common;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Orchestrator
 {
-    public class Product
-    {
-        //[JsonPropertyName("_id")]
-        //public string Id { get; set; }
-
-        public string Name { get; set; }
-
-        public long Quantity { get; set; }
-
-        public int Price { get; set; }
-    }
-
-    public class Wallet
-    {
-        //[JsonPropertyName("_id")]
-        //public string Id { get; set; }
-
-        public long Amount { get; set; }
-    }
-
     public interface IServices
     {
         Task<List<Product>> GetAllProducts();
-        Task<bool> OrderProduct(string productName, int items);
+        Task<bool> OrderProduct(string name, int quantity);
 
         Task<List<Wallet>> GetAllWallets();
         Task SendMoney(long amount);
@@ -46,20 +29,29 @@ namespace Orchestrator
         {
             var httpClient = _clientFactory.CreateClient();
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:6100/api/Products");
-            string responseJson = await response.Content.ReadAsStringAsync();
 
-            var result = JsonSerializer.Deserialize<List<Product>>(responseJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            //string responseJson = await response.Content.ReadAsStringAsync();
+            //var result = JsonSerializer.Deserialize<List<Product>>(responseJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var result = await response.Content.ReadFromJsonAsync<List<Product>>();
             return result;
         }
 
-        public async Task<bool> OrderProduct(string productName, int items)
+        public async Task<bool> OrderProduct(string name, int quantity)
         {
-            string json = JsonSerializer.Serialize(new { Name = productName, Quantity = items });
-            StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
             var httpClient = _clientFactory.CreateClient();
-            HttpResponseMessage response = await httpClient.PostAsync("http://localhost:6100/api/Products", httpContent);
 
+            //string json = JsonSerializer.Serialize(new { Name = product.Name, Quantity = product.Quantity });
+            //StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, MediaTypeNames.Application.Json);
+            //HttpResponseMessage response = await httpClient.PostAsync("http://localhost:6100/api/Products", httpContent);
+
+            Product p = new Product
+            {
+                Name = name,
+                Quantity = quantity
+            };
+
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://localhost:6100/api/Products", p);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
 
@@ -68,9 +60,12 @@ namespace Orchestrator
             throw new NotImplementedException();
         }
 
-        public Task SendMoney(long amount)
+        public async Task<bool> SendMoney(long amount)
         {
-            throw new NotImplementedException();
+            var httpClient = _clientFactory.CreateClient();
+
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://localhost:6200/api/Wallet", amount);
+            return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
     }
 }

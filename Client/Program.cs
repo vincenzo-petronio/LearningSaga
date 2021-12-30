@@ -17,7 +17,6 @@ var host = Host.CreateDefaultBuilder(args)
                 .UseRabbitMQTransport(new RabbitConfiguration("localhost", "guest", "guest"))
                 .UseMongoPersistence(new MongoConfiguration("mongodb://user:user@localhost:27017/saga", "saga", MongoSagaStateRepositoryOptions.Default, MongoOutboxRepositoryOptions.Default));
         });
-        //services.AddScoped<IMessageBus>();
     })
     .Build();
 

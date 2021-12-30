@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,7 +23,7 @@ namespace ServiceTwo.Controllers
         public async Task<List<Wallet>> Get()
         {
             var response = await _walletService.GetWalletsAsync();
-            return response.ToList();
+            return response;
         }
 
         // GET api/<WalletController>/5
@@ -36,28 +37,31 @@ namespace ServiceTwo.Controllers
 
         // POST api/<WalletController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<WalletController>/5
-        [HttpPut("{id}")]
-        public async void Put(int id, [FromBody] string value)
+        public async void Post([FromBody] long value)
         {
             var response = await _walletService.GetWalletsAsync();
 
             Wallet w = new Wallet
             {
                 Id = response[0].Id,
-                Amount = 10
+                Amount = response[0].Amount + value
             };
+
             await _walletService.UpdateWalletAsync(response[0].Id, w);
+        }
+
+        // PUT api/<WalletController>/5
+        [HttpPut("{id}")]
+        public async void Put(int id, [FromBody] string value)
+        {
+            throw new NotImplementedException();
         }
 
         // DELETE api/<WalletController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new NotImplementedException();
         }
     }
 }

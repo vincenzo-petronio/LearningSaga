@@ -46,31 +46,39 @@ namespace Orchestrator
         {
             _logger.LogInformation($"SAGA process Product '{context.Message.CorrelationId}'...");
 
-            var products = await _services.GetAllProducts();
-            var phones = products.Where(p => p.Name.Equals("phone")).FirstOrDefault();
+            Task<bool> t1 = _services.OrderProduct("phone", this.State.Items);
+            Task<bool> t2 = _services.OrderProduct("keyboard", this.State.Items);
+            Task<bool> t3 = _services.OrderProduct("monitor", this.State.Items);
 
-            if (phones?.Quantity > this.State.Items)
+            var t = await Task.WhenAll(t1, t2, t3);
+            if (t.All(t => true))
             {
-                bool result = await _services.OrderProduct(phones.Name, this.State.Items);
-
-                if (result)
-                {
-                    var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
-                    this.Publish(msg);
-                }
+                var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
+                this.Publish(msg);
             }
+            //}
         }
 
-        public Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"SAGA process Wallet '{context.Message.CorrelationId}'...");
-            throw new NotImplementedException();
+
+            var products = await _services.GetAllProducts();
+            var sum = products.Sum(p => p.Price * this.State.Items);
+
+
+            await _services.SendMoney(sum);
+
+            var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
+            this.Publish(msg);
         }
 
         public Task HandleAsync(IMessageContext<BuySagaEnd> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"SAGA end '{context.Message.CorrelationId}'...");
-            throw new NotImplementedException();
+
+            this.State.MarkAsCompleted();
+            return Task.CompletedTask;
         }
     }
 }

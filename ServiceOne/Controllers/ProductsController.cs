@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ServiceOne.Data;
+﻿using Common;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,23 +27,30 @@ namespace ServiceOne.Controllers
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public async Task<Product> Get(int id)
+        public async Task<Product> Get(string id)
         {
             var products = await _productService.GetProductsAsync();
+            var product = products.Where(p => p.Id.ToString() == id).First();
 
-            return await _productService.GetProductByIdAsync(products[0].Id);
+            return await _productService.GetProductByIdAsync(product.Id);
         }
 
         // POST api/<ProductsController>
         [HttpPost]
-        public void Post([FromBody] Product product)
+        public async void Post([FromBody] Product product)
         {
+            var products = await _productService.GetProductsAsync();
+            var prod = products.Where(p => p.Name == product.Name).First();
+            prod.Quantity -= product.Quantity;
+
+            await _productService.UpdateProductAsync(prod);
         }
 
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+
         }
 
         // DELETE api/<ProductsController>/5

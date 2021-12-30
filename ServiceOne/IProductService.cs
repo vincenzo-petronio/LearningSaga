@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Common;
+using MongoDB.Bson;
 using ServiceOne.Data;
 
 namespace ServiceOne
@@ -8,6 +9,8 @@ namespace ServiceOne
         Task<List<Product>> GetProductsAsync();
 
         Task<Product> GetProductByIdAsync(ObjectId id);
+
+        Task<bool> UpdateProductAsync(Product product);
     }
 
     public class ProductService : IProductService
@@ -28,6 +31,11 @@ namespace ServiceOne
         public async Task<Product> GetProductByIdAsync(ObjectId id)
         {
             return await _productRepository.GetByIdAsync(id);
+        }
+
+        public async Task<bool> UpdateProductAsync(Product product)
+        {
+            return await _productRepository.UpdateAsync(product);
         }
     }
 }

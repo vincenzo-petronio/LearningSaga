@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Common;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ServiceTwo
@@ -9,7 +10,7 @@ namespace ServiceTwo
 
         Task<Wallet> GetWalletByIdAsync(ObjectId id);
 
-        Task UpdateWalletAsync(ObjectId id, Wallet wallet);
+        Task<bool> UpdateWalletAsync(ObjectId id, Wallet wallet);
     }
 
     public class WalletService : IWalletService
@@ -37,9 +38,10 @@ namespace ServiceTwo
             return response.First();
         }
 
-        public async Task UpdateWalletAsync(ObjectId id, Wallet wallet)
+        public async Task<bool> UpdateWalletAsync(ObjectId id, Wallet wallet)
         {
-            await _walletCtx.ReplaceOneAsync(w => w.Id == id, wallet);
+            var result = await _walletCtx.ReplaceOneAsync(w => w.Id == id, wallet);
+            return result.UpsertedId != null;
         }
     }
 }

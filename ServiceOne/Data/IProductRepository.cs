@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Common;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ServiceOne.Data
@@ -11,9 +12,9 @@ namespace ServiceOne.Data
 
         Task<TPrimaryKey> InsertAsync(TEntity entity);
 
-        Task UpdateAsync(TEntity entity);
+        Task<bool> UpdateAsync(TEntity entity);
 
-        Task DeleteAsync(TEntity entity);
+        Task<bool> DeleteAsync(TEntity entity);
     }
 
     public interface IProductRepository : IRepository<Product, ObjectId>
@@ -75,12 +76,13 @@ namespace ServiceOne.Data
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Product entity)
+        public async Task<bool> UpdateAsync(Product entity)
         {
-            throw new NotImplementedException();
+            var result = await _productsCtx.ReplaceOneAsync(o => o.Name == entity.Name, entity);
+            return result.UpsertedId != null;
         }
 
-        public Task DeleteAsync(Product entity)
+        public Task<bool> DeleteAsync(Product entity)
         {
             throw new NotImplementedException();
         }
