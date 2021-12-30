@@ -1,9 +1,5 @@
-﻿using Common;
-using System.Net.Http;
+﻿using SagaCommon;
 using System.Net.Http.Json;
-using System.Net.Mime;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Orchestrator
 {
@@ -13,7 +9,7 @@ namespace Orchestrator
         Task<bool> OrderProduct(string name, int quantity);
 
         Task<List<Wallet>> GetAllWallets();
-        Task SendMoney(long amount);
+        Task<bool> SendMoney(long amount);
     }
 
     public class Services : IServices

@@ -6,6 +6,7 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
+#COPY ["Common/SagaCommon.csproj", "Common/"]
 COPY ["ServiceOne/ServiceOne.csproj", "ServiceOne/"]
 RUN dotnet restore "ServiceOne/ServiceOne.csproj"
 COPY . .

@@ -1,10 +1,10 @@
-﻿using Common;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenSleigh.Core.DependencyInjection;
 using OpenSleigh.Core.Messaging;
 using OpenSleigh.Persistence.Mongo;
 using OpenSleigh.Transport.RabbitMQ;
+using SagaCommon;
 
 Console.WriteLine("Start console client...");
 
