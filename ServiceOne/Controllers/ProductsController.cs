@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SagaCommon;
+using MongoDB.Bson;
+using ServiceOne.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,15 +30,13 @@ namespace ServiceOne.Controllers
         [HttpGet("{id}")]
         public async Task<Product> Get(string id)
         {
-            var products = await _productService.GetProductsAsync();
-            var product = products.Where(p => p.Id.ToString() == id).First();
-
-            return await _productService.GetProductByIdAsync(product.Id);
+            ObjectId objectId = ObjectId.Parse(id);
+            return await _productService.GetProductByIdAsync(objectId);
         }
 
         // POST api/<ProductsController>
         [HttpPost]
-        public async void Post([FromBody] Product product)
+        public async void Post(Product product)
         {
             var products = await _productService.GetProductsAsync();
             var prod = products.Where(p => p.Name == product.Name).First();
@@ -50,13 +49,14 @@ namespace ServiceOne.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-
+            throw new NotImplementedException();
         }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new NotImplementedException();
         }
     }
 }

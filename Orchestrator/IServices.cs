@@ -1,8 +1,18 @@
-﻿using SagaCommon;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Orchestrator
 {
+    public class Product
+    {
+        public string Name { get; set; }
+        public long Quantity { get; set; }
+    }
+
+    public class Wallet
+    {
+        public long Amount { get; set; }
+    }
+
     public interface IServices
     {
         Task<List<Product>> GetAllProducts();
@@ -40,6 +50,10 @@ namespace Orchestrator
             //string json = JsonSerializer.Serialize(new { Name = product.Name, Quantity = product.Quantity });
             //StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, MediaTypeNames.Application.Json);
             //HttpResponseMessage response = await httpClient.PostAsync("http://host.docker.internal:6100/api/Products", httpContent);
+
+            // fake random delay
+            int milliseconds = new Random().Next(1, 3) * 1000;
+            await Task.Delay(milliseconds);
 
             Product p = new Product
             {

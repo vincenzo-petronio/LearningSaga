@@ -56,21 +56,20 @@ namespace Orchestrator
                 var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
                 this.Publish(msg);
             }
-            //}
         }
 
         public async Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"SAGA process Wallet '{context.Message.CorrelationId}'...");
 
-            var products = await _services.GetAllProducts();
-            var sum = products.Sum(p => p.Price * this.State.Items);
+            //var products = await _services.GetAllProducts();
+            //var sum = products.Sum(p => p.Price * this.State.Items);
 
 
-            await _services.SendMoney(sum);
+            //await _services.SendMoney(sum);
 
-            var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
-            this.Publish(msg);
+            //var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
+            //this.Publish(msg);
         }
 
         public Task HandleAsync(IMessageContext<BuySagaEnd> context, CancellationToken cancellationToken = default)

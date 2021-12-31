@@ -79,7 +79,7 @@ namespace ServiceOne.Data
         public async Task<bool> UpdateAsync(Product entity)
         {
             var result = await _productsCtx.ReplaceOneAsync(o => o.Name == entity.Name, entity);
-            return result.UpsertedId != null;
+            return result.IsAcknowledged;
         }
 
         public Task<bool> DeleteAsync(Product entity)
