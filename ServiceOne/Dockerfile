@@ -6,15 +6,17 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-#COPY ["Common/SagaCommon.csproj", "Common/"]
+COPY ["Common/*.csproj", "Common/"]
 COPY ["ServiceOne/ServiceOne.csproj", "ServiceOne/"]
 RUN dotnet restore "ServiceOne/ServiceOne.csproj"
 COPY . .
+WORKDIR "/src/Common"
+RUN dotnet build "SagaCommon.csproj" -c Release -o /app/build
 WORKDIR "/src/ServiceOne"
 RUN dotnet build "ServiceOne.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ServiceOne.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

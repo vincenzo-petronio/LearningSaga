@@ -14,8 +14,8 @@ await Host.CreateDefaultBuilder(args)
     {
         services.AddOpenSleigh(cfg =>
         {
-            cfg.UseRabbitMQTransport(new RabbitConfiguration("localhost", "guest", "guest"))
-            .UseMongoPersistence(new MongoConfiguration("mongodb://user:user@localhost:27017/saga", "saga", MongoSagaStateRepositoryOptions.Default, MongoOutboxRepositoryOptions.Default));
+            cfg.UseRabbitMQTransport(new RabbitConfiguration("host.docker.internal", "guest", "guest"))
+            .UseMongoPersistence(new MongoConfiguration("mongodb://user:user@host.docker.internal:27017/saga", "saga", MongoSagaStateRepositoryOptions.Default, MongoOutboxRepositoryOptions.Default));
 
             cfg.AddSaga<BuySaga, BuySagaState>()
             .UseStateFactory<BuySagaStart>(msg => new BuySagaState(msg.CorrelationId))

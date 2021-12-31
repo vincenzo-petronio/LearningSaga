@@ -24,7 +24,7 @@ namespace Orchestrator
         public async Task<List<Product>> GetAllProducts()
         {
             var httpClient = _clientFactory.CreateClient();
-            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:6100/api/Products");
+            HttpResponseMessage response = await httpClient.GetAsync("http://host.docker.internal:6100/api/Products");
 
             //string responseJson = await response.Content.ReadAsStringAsync();
             //var result = JsonSerializer.Deserialize<List<Product>>(responseJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -39,7 +39,7 @@ namespace Orchestrator
 
             //string json = JsonSerializer.Serialize(new { Name = product.Name, Quantity = product.Quantity });
             //StringContent httpContent = new StringContent(json, System.Text.Encoding.UTF8, MediaTypeNames.Application.Json);
-            //HttpResponseMessage response = await httpClient.PostAsync("http://localhost:6100/api/Products", httpContent);
+            //HttpResponseMessage response = await httpClient.PostAsync("http://host.docker.internal:6100/api/Products", httpContent);
 
             Product p = new Product
             {
@@ -47,7 +47,7 @@ namespace Orchestrator
                 Quantity = quantity
             };
 
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://localhost:6100/api/Products", p);
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://host.docker.internal:6100/api/Products", p);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
 
@@ -60,7 +60,7 @@ namespace Orchestrator
         {
             var httpClient = _clientFactory.CreateClient();
 
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://localhost:6200/api/Wallet", amount);
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync("http://host.docker.internal:6200/api/Wallet", amount);
             return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
     }
