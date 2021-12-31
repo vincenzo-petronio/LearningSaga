@@ -6,7 +6,7 @@ using SagaCommon;
 namespace Orchestrator
 {
 
-    public class BuySagaState : SagaState
+    public record BuySagaState : SagaState
     {
         public BuySagaState(Guid id) : base(id)
         {
