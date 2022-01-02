@@ -1,3 +1,7 @@
+using OpenSleigh.Core.DependencyInjection;
+using OpenSleigh.Persistence.Mongo;
+using OpenSleigh.Transport.RabbitMQ;
+using SagaCommon;
 using ServiceTwo;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +13,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IWalletService, WalletService>();
+builder.Services.AddOpenSleigh(cfg =>
+{
+    cfg.UseRabbitMQTransport(new RabbitConfiguration("host.docker.internal", "guest", "guest"))
+    .UseMongoPersistence(new MongoConfiguration("mongodb://user:user@host.docker.internal:27017/saga", "saga", MongoSagaStateRepositoryOptions.Default, MongoOutboxRepositoryOptions.Default));
+
+    cfg.AddSaga<PaymentSaga, PaymentSagaState>()
+    .UseStateFactory<BuySagaProcessWallet>(msg => new PaymentSagaState(msg.CorrelationId))
+    .UseRabbitMQTransport()
+    ;
+});
 
 var app = builder.Build();
 

@@ -4,8 +4,9 @@ namespace Orchestrator
 {
     public class Product
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public long Quantity { get; set; }
+        public int Price { get; set; }
     }
 
     public class Wallet

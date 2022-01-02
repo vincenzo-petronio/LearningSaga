@@ -18,7 +18,7 @@ namespace Orchestrator
     public class BuySaga : Saga<BuySagaState>,
         IStartedBy<BuySagaStart>,
         IHandleMessage<BuySagaProcessProduct>,
-        IHandleMessage<BuySagaProcessWallet>,
+        //IHandleMessage<BuySagaProcessWallet>,
         IHandleMessage<BuySagaEnd>
     {
         private readonly ILogger<BuySaga> _logger;
@@ -53,24 +53,27 @@ namespace Orchestrator
             var t = await Task.WhenAll(t1, t2, t3);
             if (t.All(t => true))
             {
+                var products = await _services.GetAllProducts();
+                var sum = products.Sum(p => p.Price * this.State.Items);
+
                 var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
+                msg.Total = sum;
                 this.Publish(msg);
             }
         }
 
-        public async Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"SAGA process Wallet '{context.Message.CorrelationId}'...");
+        //public async Task HandleAsync(IMessageContext<BuySagaProcessWallet> context, CancellationToken cancellationToken = default)
+        //{
+        //    _logger.LogInformation($"SAGA process Wallet '{context.Message.CorrelationId}'...");
 
-            //var products = await _services.GetAllProducts();
-            //var sum = products.Sum(p => p.Price * this.State.Items);
+        //    var products = await _services.GetAllProducts();
+        //    var sum = products.Sum(p => p.Price * this.State.Items);
+        //    this.State.Total = sum;
 
-
-            //await _services.SendMoney(sum);
-
-            //var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
-            //this.Publish(msg);
-        }
+        //    //await _services.SendMoney(sum);
+        //    //var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
+        //    //this.Publish(msg);
+        //}
 
         public Task HandleAsync(IMessageContext<BuySagaEnd> context, CancellationToken cancellationToken = default)
         {
