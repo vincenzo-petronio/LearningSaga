@@ -6,8 +6,5 @@ namespace SagaCommon
 
     public record BuySagaProcessProduct(Guid Id, Guid CorrelationId) : ICommand { }
 
-    public record BuySagaProcessWallet(Guid Id, Guid CorrelationId) : ICommand
-    {
-        public long Total { get; set; }
-    }
+    public record BuySagaProcessWallet(Guid Id, Guid CorrelationId, long Total) : ICommand { }
 }

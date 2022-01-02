@@ -56,8 +56,7 @@ namespace Orchestrator
                 var products = await _services.GetAllProducts();
                 var sum = products.Sum(p => p.Price * this.State.Items);
 
-                var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId);
-                msg.Total = sum;
+                var msg = new BuySagaProcessWallet(Guid.NewGuid(), context.Message.CorrelationId, sum);
                 this.Publish(msg);
             }
         }
@@ -68,7 +67,6 @@ namespace Orchestrator
 
         //    var products = await _services.GetAllProducts();
         //    var sum = products.Sum(p => p.Price * this.State.Items);
-        //    this.State.Total = sum;
 
         //    //await _services.SendMoney(sum);
         //    //var msg = new BuySagaEnd(Guid.NewGuid(), context.Message.CorrelationId);
